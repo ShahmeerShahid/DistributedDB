@@ -1,0 +1,30 @@
+.center {
+    text-align: center;
+}
+
+.url-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.section {
+    padding: 2rem 1rem 1rem 0rem;
+}
+
+.form {
+    height: 100%;
+}
+
+.button-container {
+    padding: 1rem;
+}
+
+.card {
+    width: 75vw;
+    padding: 2rem;
+    align-items: center;
+    border-radius: 1rem;
+    transition: height 1s;
+}
