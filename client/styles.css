@@ -28,3 +28,13 @@
     border-radius: 1rem;
     transition: height 1s;
 }
+
+.test {
+    height: 20vh;
+    transition: height 0.5s ease-out;
+}
+
+.hover {
+    height: 40vh;
+    transition: height 0.5s ease-in;
+}
