@@ -32,7 +32,7 @@
 
 In creating this project, we aimed to create a system which was highly specialized for the specific task of shortening URL in a distributed manner. Therefore, there are two key components to this system:
 
-- Distributed database, which shards data across multiple nodes and manages the redistribution of data when the number of nodes in our cluster changes
+- Distributed database, which shards data across multiple nodes and manages the redistribution of data when the number of nodes in our cluster changes. In effect, this is a custom implementation of Apache Cassandra: https://cassandra.apache.org/ 
 
 - Distributed application, which load balances incoming requests to all active worker nodes.
 
