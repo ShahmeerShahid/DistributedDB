@@ -1,0 +1,29 @@
+#!/bin/bash
+test_type=$1
+proxy_host=$2
+num_threads=$3
+read_tests=$4
+write_tests=$5
+
+if [ "$test_type" == "random" ]; then
+    output="./out/$test_type"_machine_"$(hostname)"_read_"$read_tests"_write_"$write_tests.out"
+    touch $output
+elif [ "$test_type" == "cache" ]; then
+    output="./out/$test_type"_machine_"$(hostname)"_read_"$read_tests.out"
+    touch $output
+else
+    echo "unknown test type"
+    exit 1
+fi
+touch $output
+
+if [ "$test_type" == "random" ]; then
+    test_file="random_tests.py"    
+    python3 $test_file $proxy_host $(hostname) $num_threads $read_tests $write_tests > $output &
+elif [ "$test_type" == "cache" ]; then
+    test_file="cache_tests.py"
+    python3 $test_file $proxy_host $(hostname) $num_threads $read_tests > $output &
+else
+    echo "unknown test type"
+    exit 1
+fi

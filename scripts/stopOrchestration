@@ -1,0 +1,21 @@
+#!/bin/bash
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+
+echo "Killing proxy"
+
+if [ "$1" == "-d" ]; then
+	PROXY_PORT=8031
+else
+	PROXY_PORT=8030
+	crontab -r
+fi
+
+for host in `cat ${CWD}/../proxy/hosts.txt`
+do
+	ssh $host "${CWD}/stopNode $1"
+done
+
+$CWD/utils/stop_proxy $PROXY_PORT
+
+echo "All systems stopped successfully."

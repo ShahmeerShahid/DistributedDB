@@ -1,0 +1,20 @@
+#!/bin/bash
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+echo "Starting on "$(hostname)
+LOCALPORT=$2
+DBLOCATION=$3
+cd $CWD/..
+if [ "$1" == "-d" ]; then
+    java -classpath ".:sqlite-jdbc-3.32.3.2.jar" urlshortner/URLShortner $LOCALPORT $DBLOCATION &> /dev/null &
+else
+    if [ "$1" == "-t" ]; then
+        java -classpath ".:sqlite-jdbc-3.32.3.2.jar" urlshortner/URLShortner >>/dev/null 2>&1 &
+    else
+        java -classpath ".:sqlite-jdbc-3.32.3.2.jar" jdbc/DBInit > $CWD/out/service$(hostname).out 2>$CWD/out/service$(hostname).error < /dev/null
+        java -classpath ".:sqlite-jdbc-3.32.3.2.jar" urlshortner/URLShortner > $CWD/out/service$(hostname).out 2>$CWD/out/service$(hostname).error < /dev/null &
+    fi
+    echo $! > $CWD/out/service$(hostname).pid;
+fi
+

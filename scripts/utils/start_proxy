@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PROXY_PORT=$1
+NODE_PORT=$2
+HOSTS_FILE=$3
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT=$CWD/../..
+cd $ROOT
+nohup java proxy/Proxy $PROXY_PORT $NODE_PORT $HOSTS_FILE > $ROOT/scripts/out/proxy.out 2> $ROOT/scripts/out/proxy.error < /dev/null &
+echo "Started proxy"
+

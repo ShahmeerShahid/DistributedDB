@@ -1,0 +1,13 @@
+*.class
+proxy/*.class
+*.txt*
+database.txt
+scripts/out/*.out
+scripts/out/*.pid
+scripts/out/*.error
+performanceTesting/out/*.out
+urlshortner/*.class
+jdbc/*.class
+.vscode
+__pycache__
+scripts/crontab

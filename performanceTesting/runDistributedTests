@@ -1,0 +1,54 @@
+#!/bin/bash
+CWD=$(pwd)
+HOST_FILE="./hosts.txt"
+test_type=$1
+proxy_host=$2
+num_threads=$3
+total_read_tests=$4
+total_write_tests=$5
+num_hosts=$(wc -w $HOST_FILE | awk '{print $1}')
+
+read_tests_per_host=$(expr $total_read_tests / $num_hosts)
+
+for host in `cat ./hosts.txt`
+do
+    if [ $test_type == "random" ]; then
+        write_tests_per_host=$(expr $total_write_tests / $num_hosts)
+        echo "$host sending random $read_tests_per_host "read" tests and $write_tests_per_host "write" tests to $proxy_host"
+        ssh $host "cd $CWD; ./runLocalTests $test_type $proxy_host $num_threads $read_tests_per_host $write_tests_per_host "
+    elif [ $test_type == "cache" ]; then
+        echo "$host sending $read_tests_per_host "read" tests to $proxy_host"
+        ssh $host "cd $CWD; ./runLocalTests $test_type $proxy_host $num_threads $read_tests_per_host"
+    else
+        echo "unknown test type"
+	fi
+done
+
+check_file_is_empty() {
+    data_ready=1
+    for data_file in `ls | grep $test_type`; do
+        lines=$(wc -l $data_file | awk '{print $1}')
+        if (( $lines < 1 )); then
+            data_ready=0
+            break
+        fi
+    done
+}
+
+merge_files() {
+    cd ./out
+    data_ready=1
+    check_file_is_empty
+    while [ $data_ready -eq 0 ]; do
+        check_file_is_empty
+    done
+    for data_file in `ls | grep $test_type`; do
+        cat $data_file >> ../data/$test_type".csv"
+        rm -f $data_file
+    done
+}
+
+merge_files
+
+# # rm -f ./$test_type*.out/
+# echo "$read_count $write_count $max_time $threads_count"

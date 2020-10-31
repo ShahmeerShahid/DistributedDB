@@ -1,0 +1,4 @@
+#!/bin/bash
+# Apache HTTP server bench marking, 1000 requests, concurrency at 10 requests perform at a time, with gnuplot-file set to load.tsv
+proxy_host=$1
+ab -n 1000 -c 10 -g load.tsv http://$proxy_host:8030/000000000000000000000000000000000000000

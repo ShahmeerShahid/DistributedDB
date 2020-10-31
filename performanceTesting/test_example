@@ -1,0 +1,3 @@
+#!/bin/bash
+./runDistributedTests random dh2020pc20 8 1000 200
+./runDistributedTests cache dh2020pc20 8 1000

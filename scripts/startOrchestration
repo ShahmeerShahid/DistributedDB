@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# one time tasks
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo "waiting for monitoring service to begin."
+USER=$(whoami)
+# while [ ! -f $CWD'/usage.txt' ]
+# do
+#   sleep 2
+# done
+cd $CWD/..
+javac $CWD/../proxy/*.java
+echo "deleting $CWD/out/proxy.*"
+rm -rf $CWD/out/proxy.*
+
+if [ "$1" == "-t" ]; then
+    java proxy/Proxy >>/dev/null 2>&1 &
+else
+    # nohup java proxy/Proxy > $CWD/out/proxy.out 2> $CWD/out/proxy.error < /dev/null &
+    $CWD/utils/start_proxy
+fi
+
+# compile jdbc
+javac -classpath ".:sqlite-jdbc-3.32.3.2.jar" jdbc/*.java
+# compile URLShortner
+javac $CWD/../urlshortner/*.java
+
+for host in `cat $CWD/../proxy/hosts.txt`
+do  
+    if [ "$1" == "-t" ]; then
+	    ssh $host "${CWD}/startNode -t"
+    else
+        ssh $host "${CWD}/startNode"
+    fi
+done
+
+# setup recurring tasks
+rm -rf $CWD/crontab
+CRONOUT="${CWD}/out/scripts.out"
+rm -rf $CRONOUT
+echo "
+* * * * * /bin/bash -c '${CWD}/healthService' >> ${CRONOUT}
+* * * * * ( sleep 30 ; /bin/bash -c '${CWD}/healthService' >> ${CRONOUT} )
+
+* * * * * /bin/bash -c 'python3 ${CWD}/dbConsistency.py' >> ${CRONOUT}
+* * * * * ( sleep 30 ; python3 ${CWD}/dbConsistency.py' >> ${CRONOUT} )
+
+* * * * * ( sleep 5 ; /bin/bash -c '$CWD/fixNode' >> ${CRONOUT} )
+* * * * * ( sleep 35 ; /bin/bash -c '$CWD/fixNode' >> ${CRONOUT} )
+" >> $CWD/crontab
+crontab $CWD/crontab
+
+
+echo "🚀 started all nodes."

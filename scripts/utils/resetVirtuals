@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+USER=$(whoami)
+
+for host in `cat $CWD/../../proxy/hosts.txt`
+do
+	ssh $host "rm -rf /virtual/${USER}/URLShortner"
+done
+rm -rf $CWD/../out/service*
+rm -rf $CWD/../out/proxy.*

@@ -1,0 +1,5 @@
+#!/bin/bash
+USAGE=$(mpstat 1 5 | awk 'END{print 100-$NF"%"}' &)
+pid=$!
+wait $pid
+echo "$(hostname) CPU usage IS "$USAGE

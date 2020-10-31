@@ -1,0 +1,23 @@
+#!/bin/bash
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+echo -e "\nRunning Health Check service 🚑"
+for host in `cat ${CWD}/../proxy/hosts.txt`
+do
+    # output: HOSTNAME UP/DOWN LINES_IN_DB (LINES_IN_DB is only present if host is UP)
+    # output: dh2020pc05 UP 52
+    # output: dh2020pc02 DOWN
+    STATUS=""
+    `nc -vz $host 8026`
+    HEALTHCHECK=$?
+    if [[ $HEALTHCHECK -eq 0 ]];then
+        STATUS="UP"
+    else
+        STATUS="DOWN"
+    fi
+    echo $host $HEALTHCHECK $STATUS
+    echo $host $STATUS >> $CWD/healthcheck.txt.new
+done
+cat $CWD/healthcheck.txt.new > $CWD/healthcheck.txt
+rm -rf $CWD/healthcheck.txt.new
+sleep 10s

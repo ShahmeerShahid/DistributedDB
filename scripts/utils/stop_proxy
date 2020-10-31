@@ -1,0 +1,4 @@
+#!/bin/bash
+PORT=$1
+
+kill -9 $(lsof -i :${PORT} -s TCP:LISTEN | awk '{print $2}' | tail -n 1)

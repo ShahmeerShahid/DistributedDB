@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -f ./out/*.out
+rm -f ./data/*.merged

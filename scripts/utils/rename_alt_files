@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# this script is used to replace old database on nodes with new database created.
+# All replaces the old hosts file with the new version.
+
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+USER=$(whoami)
+
+# $2 is the new hosts file
+if [ "$1" == "-n" ]; then
+    for host in $2
+    do
+        ssh $host "mv /virtual/${USER}/URLShortner/new_db.db /virtual/${USER}/URLShortner/urlshortner.db"
+        ssh $host "rm -rf /virtual/${USER}/URLShortner/new_db.db"
+    done
+fi
+
+rm -rf $CWD/../../proxy/hosts.txt
+cp $CWD/../../proxy/hosts.txt.new $CWD/../../proxy/hosts.txt
+rm -rf $CWD/../../proxy/hosts.txt.new

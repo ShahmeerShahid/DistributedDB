@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$1" == "-d" ]; then
+    echo "Stopping on "$(hostname)
+    kill -9 $(lsof -i :8027 -s TCP:LISTEN | awk '{print $2}' | tail -n 1)
+else
+    echo "Stopping on "$(hostname)
+    kill -9 $(lsof -i :8026 -s TCP:LISTEN | awk '{print $2}' | tail -n 1)
+fi
+
