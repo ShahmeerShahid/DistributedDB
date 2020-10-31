@@ -1,8 +1,3 @@
-By:
-- Ali Raza (razaal14)
-- Jefferson Zhong (zhongjef)
-- Shahmeer Shahid (shahid89)
-
 ## 0.1. Table of Contents
 - [1. Overview](#1-overview)
 - [2. Design philosophy](#2-design-philosophy)
@@ -35,7 +30,12 @@ By:
 
 # 1. Overview
 
-In creating this project, we aimed to create a system which was highly specialized for the specific task of shortening URL in a distributed manner.
+In creating this project, we aimed to create a system which was highly specialized for the specific task of shortening URL in a distributed manner. Therefore, there are two key components to this system:
+
+- Distributed database, which shards data across multiple nodes and manages the redistribution of data when the number of nodes in our cluster changes
+
+- Distributed application, which load balances incoming requests to all active worker nodes.
+
 
 # 2. Design philosophy
 Our primary inspriation for the design of this system came from **Kubernetes**, which a system for automating the deployment and scaling of Docker containers on distributed systems.
